@@ -1,47 +1,138 @@
-# Smart Task Scheduler & Messenger  
-#### Video Demo: [https://youtu.be/oTynS6eHUYE](https://youtu.be/oTynS6eHUYE)
+# 🧠 Smart Task Scheduler & Messenger
+
+🎥 **Video Demo**: [https://youtu.be/oTynS6eHUYE](https://youtu.be/oTynS6eHUYE)
+
+**Smart Task Scheduler & Messenger** is a Python-based productivity assistant designed to simplify two common user needs: quick communication and effective task reminders. It allows users to either send an instant WhatsApp message using voice input or schedule a future task that will notify them with either a system notification or a reminder file.
+
+Using speech recognition to capture voice commands, this tool integrates messaging and scheduling into a single, lightweight command-line program.
 
 ---
 
-#### Description:
+## 💡 Motivation
 
-Smart Task Scheduler & Messenger is a Python-based productivity assistant designed to simplify two common user needs: quick communication and effective task reminders. The application allows users to either send an instant WhatsApp message using voice input or schedule a future task that will notify them with either a system notification or a reminder file. It uses speech recognition to take user input via microphone and integrates scheduling and messaging features into a single lightweight script.
+The idea stemmed from everyday productivity friction:
+- Manually opening WhatsApp just to send simple messages
+- Forgetting tasks that weren’t added to a calendar or alarm
 
-The idea stemmed from observing the repetitive friction in daily productivity workflows: manually opening WhatsApp for simple messages, and forgetting tasks that aren’t logged into a calendar or alarm. Instead of relying on separate apps for reminders and messaging, this tool combines both functionalities into one command-line Python program.
-
----
-
-#### File Overview:
-
-This project consists of a single Python file named `Project(1).py`, which encapsulates all the functionality. It is structured into clearly separated modules:
-
-- **Voice Input Module (`get_voice_input`)**:  
-  This function captures spoken input using the `SpeechRecognition` library and converts it into text via Google’s Speech API. It includes basic error handling for cases like silence, unclear speech, or no internet. If the voice input fails, the user is prompted to type their message instead. This fallback mechanism was intentionally included for reliability and better user experience.
-
-- **WhatsApp Messaging Module (`send_whatsapp_message`)**:  
-  Using `pywhatkit`, this function allows users to send a WhatsApp message instantly to any valid phone number with the country code. The message can be dictated or typed manually. For convenience and automation, the WhatsApp tab is automatically closed after sending the message.
-
-- **Task Scheduler (`schedule`)**:  
-  This module lets users schedule a task by specifying a delay (in days, hours, minutes, and seconds). For short-term reminders (5 minutes or less), the app issues a popup system notification using the `plyer` library. For longer delays, the app creates a `.txt` reminder in a dedicated `~/Reminders` directory, ensuring the user has a persistent record of scheduled tasks.
-
-- **Reminder File Creator (`create_text_reminder`)**:  
-  This function generates a human-readable reminder file with the task name and the scheduled timestamp. This design ensures flexibility even on systems where desktop notifications may be disabled or missed.
-
-- **Main Entry Point (`main`)**:  
-  This interactive CLI prompts the user to choose between sending a WhatsApp message or scheduling a reminder. It orchestrates the logic accordingly, taking in input parameters and calling the appropriate modules.
+Instead of switching between apps, this script provides **two key functions**:
+- 🎙️ Speak and send a message instantly
+- ⏰ Schedule a reminder with a voice or keyboard input
 
 ---
 
-#### Design Decisions:
+## 🗂️ File Overview
 
-Several design choices were debated during development. One key decision was handling short vs. long reminders differently. Originally, all tasks were meant to trigger system notifications, but this posed reliability issues for longer durations (especially if the script or system shut down). Thus, a split was introduced: short-term tasks use real-time notifications, while long-term tasks are logged as files, giving users control and persistence.
+This version of the project has been modularized for maintainability:
 
-Another consideration was voice input. Although convenient, it’s inherently unreliable in noisy environments. To address this, a manual fallback input method was added. This hybrid design balances innovation with practicality.
-
-The decision to keep everything in a single file was made to reduce setup complexity and enhance portability. However, with additional features, modularization into multiple scripts or classes would be the logical next step.
+```
+smart-task-scheduler/
+├── main.py                  # Entry point for the CLI interface
+├── voice_input.py           # Captures and processes spoken input
+├── whatsapp_messenger.py    # Sends WhatsApp messages via pywhatkit
+├── scheduler.py             # Handles notifications and text reminders
+└── reminders/               # Auto-created for long-term task reminder files
+```
 
 ---
 
-#### Conclusion:
+## 🔍 Module Breakdown
 
-Smart Task Scheduler & Messenger is a practical and user-friendly tool that demonstrates how voice recognition, automation, and messaging can be combined in a cohesive, minimal Python project. It offers users real utility while also serving as a strong example of integrating multiple external libraries into a functional application. Whether you're reminding yourself to check on dinner or instantly messaging a colleague, this script gets it done—with your voice or your keyboard.
+### 🎙️ `get_voice_input` (in `voice_input.py`)
+- Captures speech using `SpeechRecognition` and Google’s Speech API
+- Includes robust error handling for silence, noise, or connectivity issues
+- Falls back to manual keyboard input if voice recognition fails
+
+### 💬 `send_whatsapp_message` (in `whatsapp_messenger.py`)
+- Sends an instant WhatsApp message via `pywhatkit`
+- Accepts either dictated or typed input
+- Automatically closes the browser tab after sending
+
+### ⏰ `schedule` (in `scheduler.py`)
+- Accepts a delay (days, hours, minutes, seconds) for scheduling
+- For delays under 5 minutes: shows a **system popup notification**
+- For longer delays: creates a **.txt file reminder** in `~/Reminders`
+
+### 📝 `create_text_reminder`
+- Generates a persistent file-based reminder containing task details
+- Designed as a fallback when notifications may be missed or unsupported
+
+### 🧭 `main.py`
+- Command-line interface that prompts the user to:
+  - (1) Send a WhatsApp message
+  - (2) Schedule a task reminder
+- Routes logic based on user selection
+
+---
+
+## 💡 Design Decisions
+
+### 📌 Dual Reminder Strategy
+- **Short reminders** use system notifications for immediacy
+- **Long reminders** are saved to disk to survive system reboots or script shutdown
+
+### 🧠 Voice Input with Fallback
+- Voice control is powerful but error-prone in noisy environments
+- A **manual input fallback** ensures a reliable experience for all users
+
+### 🗃️ Originally Single-File
+- The project began as a compact single-file script
+- It has since been modularized into separate logical components to support future growth and better organization
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/namannnrana/smart-task-scheduler.git
+cd smart-task-scheduler
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install SpeechRecognition pywhatkit plyer pyaudio
+```
+
+> Trouble with PyAudio?
+> ```bash
+> pip install pipwin
+> pipwin install pyaudio
+> ```
+
+### 3. Run the Program
+
+```bash
+python main.py
+```
+
+---
+
+## 📜 Certificate
+
+This project was submitted as the final project for:
+
+**[CS50’s Introduction to Programming with Python](https://cs50.harvard.edu/python/2022/)** by Harvard University  
+📄 Certificate Link: [cs50.harvard.edu/certificates/c8cf09c0-fefc-4dca-ae68-58eee7816efe](https://cs50.harvard.edu/certificates/c8cf09c0-fefc-4dca-ae68-58eee7816efe)
+
+---
+
+## 🙋 Author
+
+**Naman Rana**  
+🔗 [GitHub: @namannnrana](https://github.com/namannnrana)
+
+---
+
+## 🪪 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙏 Acknowledgements
+
+- CS50 Team & Professor David J. Malan
+- Python open-source community
+- Users who inspired this real-world utility
